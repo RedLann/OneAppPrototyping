@@ -16,11 +16,9 @@ class OnlineRepository(val api: StubboOneAppApi): DataRepository {
     override suspend fun refreshUser() = coroutineScope {
         api.getUser().networkFold(
             ifFail = {
-                Timber.d("ENZOOO Qua")
                 userLiveData.value = Failure(it)
             },
             ifSuccess = {
-                Timber.d("ENZOOO Quo")
                 userLiveData.value = Success(it)
             }
         )

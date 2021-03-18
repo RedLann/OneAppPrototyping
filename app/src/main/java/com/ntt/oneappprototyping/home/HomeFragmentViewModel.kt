@@ -1,16 +1,12 @@
 package com.ntt.oneappprototyping.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.ntt.oneappprototyping.networking.DataRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class HomeFragmentViewModel(val repo: DataRepository): ViewModel() {
     val liveUser: LiveData<String> = Transformations.map(repo.userLiveData) {
-        Timber.d("ENZOOO Error $it")
         it.fold(
             succeeded = {
                 return@map it.name + " " + it.surname
@@ -24,10 +20,9 @@ class HomeFragmentViewModel(val repo: DataRepository): ViewModel() {
             }
         )
         "Initial Value"
-    }
+    }.distinctUntilChanged()
 
     fun onButtonClicked() = viewModelScope.launch {
-        Timber.d("ENZOOO Qui")
         repo.refreshUser()
     }
 }
